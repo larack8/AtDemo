@@ -20,9 +20,6 @@
         </activity>
 
         <activity android:name=".UserListActivity" />
-        <activity
-            android:name=".UserActivity"
-            android:parentActivityName=".MainActivity" />
     </application>
 
 </manifest>

@@ -13,20 +13,44 @@
         android:id="@+id/et_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Type your message here"
-        android:inputType="textMultiLine" />
-
-    <Button
-        android:id="@+id/btn_at"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/et_input"
-        android:text="\@" />
+        android:gravity="bottom|start"
+        android:hint="输入你的消息内容"
+        android:inputType="textMultiLine"
+        android:lines="5" />
 
     <LinearLayout
+        android:id="@+id/llyt_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btn_at"
+        android:layout_below="@id/et_input"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_at"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="\@" />
+
+        <Button
+            android:id="@+id/btn_preview_display"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="预览效果" />
+
+        <Button
+            android:id="@+id/btn_preview_data"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="预览数据" />
+    </LinearLayout>
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llyt_buttons"
         android:layout_marginTop="20dp"
         android:orientation="vertical">
 
@@ -52,6 +76,6 @@
             android:id="@+id/tv_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </LinearLayout>
+    </LinearLayout>-->
 
 </RelativeLayout>
