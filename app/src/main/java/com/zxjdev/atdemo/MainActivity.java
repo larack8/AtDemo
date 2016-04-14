@@ -66,14 +66,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_USER_LIST && resultCode == RESULT_OK) {
-            insertAt((User) data.getParcelableExtra(User.TAG));
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
     /**
      * 在输入框光标处插入"@somebody"
      *
