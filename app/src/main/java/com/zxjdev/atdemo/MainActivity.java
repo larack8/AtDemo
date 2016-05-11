@@ -44,7 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // 处理删除事件，在选中范围内的span都需要被删除
                         int selectionStart = mEtInput.getSelectionStart();
                         int selectionEnd = mEtInput.getSelectionEnd();
-                        MySpan[] spans = mEtInput.getText().getSpans(0, mEtInput.length(), MySpan.class);
+                        MySpan[] spans = mEtInput.getText()
+                                .getSpans(0, mEtInput.length(), MySpan.class);
                         for (MySpan span : spans) {
                             int spanStart = mEtInput.getText().getSpanStart(span);
                             int spanEnd = mEtInput.getText().getSpanEnd(span);
@@ -66,6 +67,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_USER_LIST && resultCode == RESULT_OK) {
+            insertAt((User) data.getParcelableExtra(User.TAG));
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     /**
      * 在输入框光标处插入"@somebody"
      *
@@ -78,11 +87,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 Log.d(TAG, user.getNickname() + " click");
-                Toast.makeText(mContext, user.getNickname() + " is clicked!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, user.getNickname() + " is clicked!", Toast.LENGTH_SHORT)
+                        .show();
             }
         };
         mEtInput.getText()
-                .setSpan(span, start, start + user.getNickname().length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                .setSpan(span, start, start + user.getNickname().length() + 1,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     /**
@@ -115,7 +126,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int spanStart = ss.getSpanStart(spans[i - 1]);
             int spanEnd = ss.getSpanEnd(spans[i - 1]);
             sb.replace(spanStart, spanEnd,
-                    String.format(pattern, spans[i - 1].getUser().getUserId(), spans[i - 1].getUser().getNickname()));
+                    String.format(pattern, spans[i - 1].getUser().getUserId(),
+                            spans[i - 1].getUser().getNickname()));
         }
         return sb.toString();
     }
