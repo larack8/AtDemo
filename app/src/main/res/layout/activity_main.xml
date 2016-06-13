@@ -9,73 +9,58 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.zxjdev.atdemo.MainActivity">
 
-    <EditText
-        android:id="@+id/et_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom|start"
-        android:hint="输入你的消息内容"
-        android:inputType="textMultiLine"
-        android:lines="5" />
-
     <LinearLayout
-        android:id="@+id/llyt_buttons"
+        android:id="@+id/llyt_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_input"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/btn_at"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="\@" />
-
-        <Button
-            android:id="@+id/btn_preview_display"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="预览效果" />
-
-        <Button
-            android:id="@+id/btn_preview_data"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="预览数据" />
-    </LinearLayout>
-
-    <!--<LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/llyt_buttons"
-        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_display"
         android:orientation="vertical">
 
-        <TextView
+        <EditText
+            android:id="@+id/et_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="The display of the input"
-            android:textSize="18sp" />
+            android:gravity="bottom|start"
+            android:hint="输入你的消息内容"
+            android:inputType="textMultiLine"
+            android:lines="5" />
 
-        <TextView
-            android:id="@+id/tv_display"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/llyt_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="The data send to server"
-            android:textSize="18sp" />
+            android:layout_below="@id/et_input"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tv_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>-->
+            <Button
+                android:id="@+id/btn_at"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="\@" />
+
+            <Button
+                android:id="@+id/btn_preview_display"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="预览效果" />
+
+            <Button
+                android:id="@+id/btn_preview_data"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="预览数据" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_mock_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/llyt_input"
+        android:layout_marginTop="10dp"
+        android:text="模拟收到数据" />
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -15,6 +16,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -35,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_at).setOnClickListener(this);
         findViewById(R.id.btn_preview_display).setOnClickListener(this);
         findViewById(R.id.btn_preview_data).setOnClickListener(this);
+        findViewById(R.id.btn_mock_data).setOnClickListener(this);
 
         mEtInput.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -83,14 +88,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void insertAt(final User user) {
         int start = mEtInput.getSelectionStart();
         mEtInput.getText().insert(start, "@" + user.getNickname());
-        MySpan span = new MySpan(user) {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, user.getNickname() + " click");
-                Toast.makeText(mContext, user.getNickname() + " is clicked!", Toast.LENGTH_SHORT)
-                        .show();
-            }
-        };
+        MySpan span = new MySpan(user.getUserId(), user.getNickname());
         mEtInput.getText()
                 .setSpan(span, start, start + user.getNickname().length() + 1,
                         Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -126,10 +124,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             int spanStart = ss.getSpanStart(spans[i - 1]);
             int spanEnd = ss.getSpanEnd(spans[i - 1]);
             sb.replace(spanStart, spanEnd,
-                    String.format(pattern, spans[i - 1].getUser().getUserId(),
-                            spans[i - 1].getUser().getNickname()));
+                    String.format(pattern, spans[i - 1].getUserId(), spans[i - 1].getNickname()));
         }
         return sb.toString();
+    }
+
+    /**
+     * 把后台返回的数据处理进行处理, 替换成spannable字符串
+     *
+     * @param spannableString 后台返回的数据
+     */
+    private SpannableStringBuilder analyseData(SpannableStringBuilder spannableString) {
+        // SpannableStringBuilder output = new SpannableStringBuilder(spannableString);
+
+        String patternStr = "<#(\\d+),((?:[A-Z]|[a-z])+)>";
+        Pattern pattern = Pattern.compile(patternStr);
+        Matcher matcher = pattern.matcher(spannableString);
+        if (matcher.find()) {
+            Log.d(TAG, "Find match: " + matcher.group());
+            String userId = matcher.group(1);
+            String nickname = matcher.group(2);
+            String atString = "@" + nickname;
+
+            // 将< , >的格式替换为@ 的格式
+            spannableString.replace(matcher.start(), matcher.end(), atString);
+
+            MySpan span = new MySpan(userId, nickname, new MySpan.OnSpanClickListener() {
+                @Override
+                public void onSpanClick(String userId, String nickname) {
+                    Toast.makeText(mContext, "nickname: " + nickname, Toast.LENGTH_SHORT).show();
+                }
+            });
+            spannableString.setSpan(span, matcher.start(), matcher.start() + atString.length(),
+                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            analyseData(spannableString);
+        }
+
+        return spannableString;
     }
 
     @Override
@@ -147,6 +179,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // 预览数据
             case R.id.btn_preview_data:
                 showPreviewData();
+                break;
+            // 模拟收到数据
+            case R.id.btn_mock_data:
+                showReceiveMockData();
                 break;
             default:
                 break;
@@ -177,6 +213,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TextView tvDescription = (TextView) view.findViewById(R.id.tv_description);
         tvDisplay.setText(parseData(mEtInput.getText()));
         tvDescription.setText("发送给后台的数据,假定“@”对象的格式为<编号,名称>");
+        AlertDialog dialog = new AlertDialog.Builder(mContext).setView(view)
+                .setNegativeButton("关闭", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        dialog.show();
+    }
+
+    private void showReceiveMockData() {
+        String mockData = "ddd<#003,Venusaur>222<#005,Charmeleon>hhh";
+        View view = getLayoutInflater().inflate(R.layout.dialog_preview, null);
+        TextView tvDisplay = (TextView) view.findViewById(R.id.tv_display);
+        TextView tvDescription = (TextView) view.findViewById(R.id.tv_description);
+        tvDisplay.setText(analyseData(new SpannableStringBuilder(mockData)));
+        tvDisplay.setMovementMethod(LinkMovementMethod.getInstance());
+        tvDescription.setText("模拟收到后台的数据: " + mockData);
         AlertDialog dialog = new AlertDialog.Builder(mContext).setView(view)
                 .setNegativeButton("关闭", new DialogInterface.OnClickListener() {
                     @Override
